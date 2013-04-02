@@ -1,4 +1,3 @@
-
 #include <cstdio>
 #include <cstring>
 #include <algorithm>
@@ -8,7 +7,7 @@ struct node
 {
     int v,w,nxt;
 }edge[500010];
-const int N=20010;
+const int N=410;
 int head[N];
 int dis[N];
 int q[N],h,r;
@@ -90,26 +89,47 @@ int Dinic(int s,int t)
     return ans;
 }
 
+int lx[N],ly[N],rx[N],ry[N];
+int sq[N];
+
+inline bool Judge(int i,int j)
+{
+    if(rx[i]<=lx[j]||lx[i]>=rx[j]||ry[i]<=ly[j]||ly[i]>=ry[j])
+        return false;
+    return true;
+}
+
 int main()
 {
-    while(scanf("%d%d",&n,&m)==2)
+    int cases;
+    scanf("%d",&cases);
+    while(cases--)
     {
+        scanf("%d%d",&n,&m);
         Init();
-        int a,b,w;
-        int s=0,t=n+1;
+        int sum=0;
+        for(int i=1;i<=m+n;i++)
+            scanf("%d%d%d%d",lx+i,ly+i,rx+i,ry+i),sq[i]=(rx[i]-lx[i])*(ry[i]-ly[i]),sum+=sq[i];
+        if(n==0||m==0)
+        {
+            printf("%d\n",sum);
+            continue;
+        }
+        int s=0,t=n+m+1;
         for(int i=1;i<=n;i++)
         {
-            scanf("%d%d",&a,&b);
-            AddEdge(s,i,a,0);
-            AddEdge(i,t,b,0);
+            AddEdge(s,i,sq[i],0);
+            for(int j=n+1;j<=m+n;j++)
+            {
+                if(Judge(i,j))
+                {
+                    AddEdge(i,j,inf,0);
+                }
+            }
         }
-        while(m--)
-        {
-            scanf("%d%d%d",&a,&b,&w);
-            AddEdge(a,b,w,w);
-        }
-        printf("%d\n",Dinic(s,t));
+        for(int i=n+1;i<=n+m;i++)
+            AddEdge(i,t,sq[i],0);
+        printf("%d\n",sum-Dinic(s,t));
     }
     return 0;
 }
-

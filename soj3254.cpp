@@ -1,4 +1,3 @@
-
 #include <cstdio>
 #include <cstring>
 #include <algorithm>
@@ -7,8 +6,8 @@ using namespace std;
 struct node
 {
     int v,w,nxt;
-}edge[500010];
-const int N=20010;
+}edge[2000010];
+const int N=2010;
 int head[N];
 int dis[N];
 int q[N],h,r;
@@ -92,24 +91,24 @@ int Dinic(int s,int t)
 
 int main()
 {
+    int cases;
+    scanf("%d",&cases);
     while(scanf("%d%d",&n,&m)==2)
     {
+        int x,a,b;
         Init();
-        int a,b,w;
-        int s=0,t=n+1;
-        for(int i=1;i<=n;i++)
+        AddEdge(0,0+n,inf,0);
+        for(int i=1;i<n;i++)
+        {
+            scanf("%d",&x);
+            AddEdge(i,i+n,x,0);
+        }
+        for(int i=1;i<=m;i++)
         {
             scanf("%d%d",&a,&b);
-            AddEdge(s,i,a,0);
-            AddEdge(i,t,b,0);
+            AddEdge(a+n,b,inf,0);
         }
-        while(m--)
-        {
-            scanf("%d%d%d",&a,&b,&w);
-            AddEdge(a,b,w,w);
-        }
-        printf("%d\n",Dinic(s,t));
+        printf("%d\n",Dinic(0,n+n-1));
     }
     return 0;
 }
-
